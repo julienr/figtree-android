@@ -1,0 +1,28 @@
+# Makefile for ANN library (required by figtree)
+INCDIR = -I../include
+CXX=g++
+
+ANNLIB=libann.a
+
+CFLAGS = -fPIC -O3 $(INCDIR) -Wfatal-errors
+
+OBJDIR = ./obj/ann
+SRCDIR = ../src/ann
+SOURCES = $(wildcard $(SRCDIR)/*.cpp)
+OBJECTS = $(addprefix $(OBJDIR)/,$(notdir $(SOURCES:.cpp=.o)))
+
+all: $(ANNLIB)
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(OBJDIR)
+	$(CXX) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(ANNLIB): $(OBJECTS)
+	ar rcs $(ANNLIB) $(OBJECTS)
+
+.PHONY: clean
+clean:
+	rm -f $(ANNLIB)
+	rm -rf $(OBJDIR)

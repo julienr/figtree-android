@@ -1,0 +1,37 @@
+# Makefile for figtree library
+INCDIR = -I../include -I../include/figtree
+CXX=g++
+
+FIGLIB=libfigtree.so
+
+OS := $(shell uname)
+MAKELIB=
+ifeq ($(OS),Linux)
+	MAKELIB=$(CXX) -shared -o
+endif
+ifeq ($(OS),Darwin)
+	MAKELIB=$(CXX) -dynamiclib -o
+endif
+
+CFLAGS = -fPIC -O3 $(INCDIR) -Wfatal-errors
+
+OBJDIR = ./obj/figtree
+SRCDIR = ../src/figtree
+SOURCES = $(wildcard $(SRCDIR)/*.cpp)
+OBJECTS = $(addprefix $(OBJDIR)/,$(notdir $(SOURCES:.cpp=.o)))
+
+all: $(FIGLIB)
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(OBJDIR)
+	$(CXX) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(FIGLIB): $(OBJECTS)
+	$(MAKELIB) $(FIGLIB) $(OBJECTS) libann.a
+
+.PHONY: clean
+clean:
+	rm -f $(FIGLIB)
+	rm -rf $(OBJDIR)
