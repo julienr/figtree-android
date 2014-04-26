@@ -4,6 +4,7 @@ LOCAL_PATH := $(call my-dir)/../src
 include $(CLEAR_VARS)
 LOCAL_MODULE := libann
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../include
+LOCAL_CFLAGS := -Wno-write-strings
 LOCAL_SRC_FILES := ann/ANN.cpp \
 									 ann/bd_fix_rad_search.cpp \
 									 ann/bd_pr_search.cpp \
@@ -22,9 +23,10 @@ include $(BUILD_STATIC_LIBRARY)
 # libfigtree.so
 include $(CLEAR_VARS)
 LOCAL_MODULE := libfigtree
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../include/figtree
+LOCAL_STATIC_LIBRARIES += libann
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../include/figtree $(LOCAL_PATH)/../include
 LOCAL_SRC_FILES := figtree/figtree.cpp \
 									 figtree/KCenterClustering.cpp
-# User application can include figtree/figtree.h
-LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../
+# User application can include figtree.h
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../include/figtree $(LOCAL_PATH)/../include
 include $(BUILD_SHARED_LIBRARY)
